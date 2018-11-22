@@ -1,22 +1,23 @@
 <?php
-//nome do arquivo ta em minusculo
+
+
 
 
 class Sql extends PDO {
      
      private $conn;
 
-     public function __construct(){//metodo construtor fazendo a conexao
+     public function __construct(){
 
-         $this->conn = new PDO("mysql:host=localhost;dbname=dbphp7","root","");//parametros de conexão
+         $this->conn = new PDO("mysql:host=localhost;dbname=dbphp7","root","");
 
     }
 
-    private function setParams($statment, $parameters = array()){//recebe os parametros
+    private function setParams($statment, $parameters = array()){
 
             foreach ($parameters as $key => $value) {
          	
-            $this->setParam($key, $value);
+            $this->setParam($statment, $key, $value);
          
     }
 
@@ -31,7 +32,7 @@ class Sql extends PDO {
     }
 
     
-     public function query($rawQuery, $params = array()){//para fazer querrys
+     public function query($rawQuery, $params = array()){
      
          $stmt = $this->conn->prepare($rawQuery);
      
