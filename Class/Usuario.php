@@ -69,7 +69,7 @@ Class Usuario {
 
 
 
-  public function loadById($id){//vai retornar uma linha da tabela
+  public function loadById($id){//VAI TRAZER UM UZUARIO ESPECIFICO
 
    $sql = new Sql();
 
@@ -108,6 +108,57 @@ Class Usuario {
   }
 
 
+     public static function getList(){//VAI TRAZER UMA LISTA DE TODOS OS USUARIOS por ser estatico nao precisara ser instanciado e por nao referenciar nenhum outro metodo da classe usuario(nao tem nenhum $this, nao esta amarado a nenhum outro metodo)
+
+       $sql = new Sql();
+
+       return $sql->select("SELECT * FROM tb_usuarios ORDER BY deslogin;");
+
+  }
+
+
+    public static function search($login){//VAI TRAZER UMA LISTA DE TODOS OS USUARIOS QUE POSSUIREM DETERMINADOS CARACTERES NO deslogin, (BUSCA)
+
+      $sql = new Sql();
+
+      return $sql->select("SELECT * FROM tb_usuarios WHERE deslogin LIKE :SEARCH ORDER BY deslogin", array(':SEARCH'=>"%".$login."%"));
+
+
+  }
+
+    public function login($login, $senha){//Traz um usuario usando o login e a senha
+
+      $sql = new Sql();
+
+      $results = $sql->select("SELECT * FROM tb_usuarios WHERE deslogin = :LOGIN AND dessenha = :PASSWORD", array(
+        ":LOGIN"=>$login, 
+        ":PASSWORD"=>$senha
+      ));
+
+      if(count($results) > 0){
+
+        $row = $results[0];
+
+        $this->setIdusuario($row['idusuario']);
+        $this->setDeslogin($row['deslogin']);
+        $this->setDessenha($row['dessenha']);
+/**/
+        $dateT = new DateTime($row['dtcadastro']);        
+        $d =  $dateT->format('d/m/Y H:i:s');
+        $this->setDtcadastro($d);  
+
+      } else {
+
+       throw new Exception("Login e/ou senha invalidos");
+       
+
+      }
+
+
+
+    }
+
+
 
 
 	   public function __toString(){//
@@ -126,7 +177,10 @@ Class Usuario {
 
 	   
 
-	   }
+	 }
+
+
+
 
 
 
