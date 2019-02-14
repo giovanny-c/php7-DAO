@@ -2,6 +2,8 @@
 
 require_once "Sql.php";
 
+
+//CRIANDO UMA CLASSE PARA A TABELA USUSARIO NO BANCO DE DADOS
 Class Usuario {
 
   private $idusuario;
@@ -10,7 +12,7 @@ Class Usuario {
   private $dtcadastro;
   
 
-  //getters
+  //getters =========================
 
   public function getIdusuario(){
 
@@ -36,7 +38,7 @@ Class Usuario {
 
   }
 
-  //setters
+  //setters =========================
 
   public function setIdusuario($value){
 
@@ -63,59 +65,62 @@ Class Usuario {
   }
 
   
-  //loadbyId
+  //loadbyId ==========================
 
-  public function loadById($id){
+
+
+  public function loadById($id){//vai retornar uma linha da tabela
 
    $sql = new Sql();
 
 
-
-
    $results = $sql->select("SELECT * FROM tb_usuarios WHERE idusuario = :ID ",array(
        ":ID"=>$id
-   ));
+   ));// valor id vai receber o valor do parametro $id que vem do loadById() e vai armazenar em um array
 
-   if (count($results) > 0) {
+   // o $result vai retornar como um array de arrays, mas como é so um registro ele terá de ser tratado
+
+   if (count($results) > 0) {//se existir resultado:
     
-     $row = $results[0];
+     $row = $results[0];//$row será igual a $results na posição do array 0
 
 
-   
+    // vai pegar os dados que voltaram como associativos, (ver metodo select() do arquivo Sql.php, linha 76) e colocar nos setters   
+
+     //$row [0=> ["idusuario" = $valor], ["deslogin" = $valor] ]
+     //o que tem nesse $row ^^^^^^ ex
+
 
 
      $this->setIdusuario($row['idusuario']);
      $this->setDeslogin($row['deslogin']);
      $this->setDessenha($row['dessenha']);
+
+//formatando a data do cadastro
      $dateT = new DateTime($row['dtcadastro']);
      
      $d =  $dateT->format('d/m/Y H:i:s');
 
 
      $this->setDtcadastro($d);
-
-     
-
-    
-
    } 
  
-    
-
   }
 
 
-	   public function __toString(){
 
-	     $d = array(array(
+
+	   public function __toString(){//
+
+	     $a = array(array(
 	       "idusuario"=>$this->getIdusuario(),
 	       "deslogin"=>$this->getDeslogin(),
 	       "dessenha"=>$this->getDessenha(),
 	       "dtcadastro"=>$this->getDtcadastro())); 
 
-	      //print_r($d);
+	      //print_r($a);
      
-          return json_encode($d);//não tava transformando em json por causa do dateTimes 
+          return json_encode($a);//não tava transformando em json por causa do dateTimes 
 
 	     
 
