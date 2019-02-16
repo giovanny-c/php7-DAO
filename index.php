@@ -43,6 +43,7 @@ echo json_encode($lista);
 
 */
 
+
 /*==============
 
 //traz uma lista de usuarios buscando pelo login
@@ -53,7 +54,7 @@ echo json_encode($search);
 
 */
 
-/*==============*/
+/*==============
 
 //Traz um usuario usando o login e a senha
 
@@ -63,6 +64,32 @@ $usuario->login("root", "54321");
 
 echo $usuario;
 // nao precisa fazer o json_encode pois ao instanciar a classe Usuario ela ja possui o metodo magico __toString() que faz o encode ao ser instanciada, diferente dos dois metodos anteriores que são chamados sem instanciar a classe
+
+*/
+
+/*==============
+
+//Faz um insert de um usuario e mostra ele
+
+$aluno = new Usuario("Jamelão","J4m3l40");
+
+$aluno->insert();
+
+echo $aluno;
+
+*/
+
+/*==============*/
+
+$usuario = new Usuario();
+
+$usuario->loadById(5);
+
+$usuario->update("professor", "!()#@$*%");
+
+echo $usuario;
+
+
 
 
 

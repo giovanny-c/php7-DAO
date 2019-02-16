@@ -1,6 +1,6 @@
 <?php
 
-require_once "Sql.php";
+//require_once "Sql.php";
 
 
 //CRIANDO UMA CLASSE PARA A TABELA USUSARIO NO BANCO DE DADOS
@@ -64,7 +64,8 @@ Class Usuario {
 
   }
 
-  
+  // LIST =======================================
+
   //loadbyId ==========================
 
 
@@ -82,27 +83,17 @@ Class Usuario {
 
    if (count($results) > 0) {//se existir resultado:
     
-     $row = $results[0];//$row será igual a $results na posição do array 0
+    // $row = $results[0];//$row será igual a $results na posição do array 0
 
-
+    //VER METODO data()
     // vai pegar os dados que voltaram como associativos, (ver metodo select() do arquivo Sql.php, linha 76) e colocar nos setters   
 
      //$row [0=> ["idusuario" = $valor], ["deslogin" = $valor] ]
      //o que tem nesse $row ^^^^^^ ex
 
+     $this->setData($results[0]);
 
-
-     $this->setIdusuario($row['idusuario']);
-     $this->setDeslogin($row['deslogin']);
-     $this->setDessenha($row['dessenha']);
-
-//formatando a data do cadastro
-     $dateT = new DateTime($row['dtcadastro']);
-     
-     $d =  $dateT->format('d/m/Y H:i:s');
-
-
-     $this->setDtcadastro($d);
+    
    } 
  
   }
@@ -137,15 +128,11 @@ Class Usuario {
 
       if(count($results) > 0){
 
-        $row = $results[0];
+        
 
-        $this->setIdusuario($row['idusuario']);
-        $this->setDeslogin($row['deslogin']);
-        $this->setDessenha($row['dessenha']);
-/**/
-        $dateT = new DateTime($row['dtcadastro']);        
-        $d =  $dateT->format('d/m/Y H:i:s');
-        $this->setDtcadastro($d);  
+        $this->setData($results[0]);
+
+        
 
       } else {
 
@@ -159,7 +146,85 @@ Class Usuario {
     }
 
 
+    
+    
+    public function setData($data){
 
+        $this->setIdusuario($data['idusuario']);
+        $this->setDeslogin($data['deslogin']);
+        $this->setDessenha($data['dessenha']);
+
+        $dateT = new DateTime($data['dtcadastro']);        
+        $d =  $dateT->format('d/m/Y H:i:s');
+        $this->setDtcadastro($d);  
+
+
+    }
+
+    // INSERT ========================================
+
+    
+
+
+    public function insert(){//ADICIONA UM NOVO USUARIO E EXIBE ELE 
+  
+      $sql = new Sql();
+
+      
+                              
+      $results = $sql->select("CALL sp_usuarios_insert(:LOGIN, :PASSWORD)",array(
+        ':LOGIN'=>$this->getDeslogin(),
+        ':PASSWORD'=>$this->getDessenha()
+    ));
+
+
+      
+
+
+      if(count($results) > 0){
+      
+        $this->setData($results[0]);
+
+      }
+
+
+    }
+
+
+    //UPDATE ========================
+    
+    public function update($login, $password){// altera o login e a senha de um usuario
+
+    $this->setDeslogin($login);
+    $this->setDessenha($password);
+
+    $sql = new Sql();
+
+    $sql->query("UPDATE tb_usuarios SET deslogin = :LOGIN, dessenha = :PASSWORD WHERE idusuario = :ID", array(
+      ':LOGIN'=>$this->getDeslogin(),
+      ':PASSWORD'=>$this->getDessenha(),
+      ':ID'=>$this->getIdusuario()
+    ));
+
+
+
+
+
+    }
+
+
+
+
+
+
+
+
+     public function __construct($login = "", $password = ""){
+
+      $this->setDeslogin($login);
+      $this->setDessenha($password);
+
+     }
 
 	   public function __toString(){//
 
@@ -173,12 +238,7 @@ Class Usuario {
      
           return json_encode($a);//não tava transformando em json por causa do dateTimes 
 
-	     
-
-	   
-
 	 }
-
 
 
 
