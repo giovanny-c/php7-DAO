@@ -71,7 +71,7 @@ echo $usuario;
 
 //Faz um insert de um usuario e mostra ele
 
-$aluno = new Usuario("Jamelão","J4m3l40");
+$aluno = new Usuario("Jamelão Jr","J4m3l40 Jr");
 
 $aluno->insert();
 
@@ -79,7 +79,9 @@ echo $aluno;
 
 */
 
-/*==============*/
+/*==============
+
+//Altera um usuario
 
 $usuario = new Usuario();
 
@@ -88,9 +90,21 @@ $usuario->loadById(5);
 $usuario->update("professor", "!()#@$*%");
 
 echo $usuario;
+*/
+
+/*==============
+
+//deleta um usuario
 
 
+$usuario = new Usuario();
 
+$usuario->loadById(48);
 
+$usuario->delete();
+
+echo $usuario;
+
+*/
 
 ?>
